@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 560" font-family="Arial" font-size="13">
+<rect width="900" height="560" fill="#fff"/>
+<rect x="20" y="90" width="430" height="450" rx="8" fill="#eef6ff" stroke="#2b6cb0" stroke-width="2"/><text x="35" y="112" font-weight="bold">VPC A ewb-vpc-a 10.10.0.0/16</text>
+<rect x="520" y="90" width="360" height="450" rx="8" fill="#effaf0" stroke="#2f855a" stroke-width="2"/><text x="535" y="112" font-weight="bold">VPC B ewb-vpc-b 10.20.0.0/16 (no IGW)</text>
+<rect x="320" y="10" width="110" height="34" fill="#fff" stroke="#333"/><text x="345" y="32">Laptop</text>
+<line x1="375" y1="44" x2="375" y2="130" stroke="#333" stroke-width="2"/><text x="385" y="85">SSH 22 (my /32)</text>
+<rect x="320" y="130" width="110" height="28" fill="#fff" stroke="#333"/><text x="333" y="149">ewb-igw-a</text>
+<rect x="40" y="170" width="390" height="150" fill="#fff" stroke="#2b6cb0"/><text x="50" y="190">Public subnet ewb-a-public 10.10.1.0/24 | RT ewb-rt-a-public</text>
+<text x="50" y="208" font-size="11">local; 0.0.0.0/0→IGW; 10.20.0.0/16→pcx</text>
+<rect x="60" y="225" width="220" height="75" fill="#ebf8ff" stroke="#2b6cb0"/><text x="70" y="245">ewb-bastion 10.10.1.10</text><text x="70" y="263">Public IPv4 | SG ewb-sg-bastion</text>
+<rect x="40" y="340" width="390" height="180" fill="#fff" stroke="#2b6cb0"/><text x="50" y="360">Private subnet ewb-a-private 10.10.2.0/24 | RT ewb-rt-a-private</text>
+<text x="50" y="378" font-size="11">local; 10.20.0.0/16→pcx</text>
+<rect x="60" y="395" width="230" height="95" fill="#ebf8ff" stroke="#2b6cb0"/><text x="70" y="415">ewb-app-a 10.10.2.10</text><text x="70" y="433">No public IP | SG ewb-sg-app-a</text><text x="70" y="451" font-size="11">SSH←10.10.1.10/32</text><text x="70" y="467" font-size="11">ICMP←10.20.1.10/32</text>
+<line x1="150" y1="300" x2="150" y2="395" stroke="#333" stroke-dasharray="4"/><text x="158" y="355" font-size="11">SSH (private)</text>
+<rect x="540" y="340" width="320" height="180" fill="#fff" stroke="#2f855a"/><text x="550" y="360">Private subnet ewb-b-private 10.20.1.0/24 | RT ewb-rt-b-private</text>
+<text x="550" y="378" font-size="11">local; 10.10.0.0/16→pcx</text>
+<rect x="560" y="395" width="280" height="95" fill="#f0fff4" stroke="#2f855a"/><text x="570" y="415">ewb-app-b 10.20.1.10</text><text x="570" y="433">No public IP | SG ewb-sg-app-b</text><text x="570" y="451" font-size="11">SSH←10.10.1.10/32</text><text x="570" y="467" font-size="11">ICMP←10.10.2.10/32</text>
+<line x1="290" y1="440" x2="560" y2="440" stroke="#c05621" stroke-width="3"/>
+<text x="318" y="428" fill="#c05621" font-weight="bold">VPC Peering ewb-a-b-peer</text><text x="345" y="460" fill="#c05621" font-size="11">private ping/SSH path</text>
+<path d="M280 262 Q520 262 620 395" fill="none" stroke="#333" stroke-dasharray="4"/><text x="440" y="250" font-size="11">bastion→App-B SSH via peering</text>
+</svg>

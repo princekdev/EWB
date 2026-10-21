@@ -1,0 +1,8 @@
+Permission denied (publickey)   -> chmod 400 ~/.ssh/ewb-lab.pem; user ec2-user; IdentitiesOnly yes
+SSH timeout to bastion          -> your public IP changed: update ewb-sg-bastion source /32
+Ping fails after peering active -> check both return routes, SG ICMP rule (type 8 from 10.10.2.10/32), subnet associations
+Peering pending-acceptance      -> accept it (same account/region)
+Bastion IP changed              -> stop/start changes public IP; update ssh config HostName
+Delete SG/subnet fails          -> ENIs remain; wait for instances to terminate
+Delete VPC DependencyViolation  -> leftover IGW/subnet/SG/peering/ENI
+(Add the real issues you hit here.)

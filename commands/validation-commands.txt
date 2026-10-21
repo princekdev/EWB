@@ -1,0 +1,25 @@
+# TEST 1 baseline (before 02 script)
+ssh ewb-app-a
+ping -c 4 10.20.1.10          # expect 100% loss
+# TEST 2 forward (after 02)
+ssh ewb-app-a ; ping -c 4 10.20.1.10     # expect 0% loss
+# TEST 3 reverse
+ssh ewb-app-b ; ping -c 4 10.10.2.10     # expect 0% loss
+# TEST 4 (laptop)
+ssh ewb-app-b
+hostname; hostname -I
+# TEST 5 no public IPv4 (run ON app-a and app-b)
+TOKEN=$(curl -s -X PUT http://169.254.169.254/latest/api/token -H "X-aws-ec2-metadata-token-ttl-seconds: 60")
+curl -s -o /dev/null -w "public-ipv4 HTTP %{http_code}\n" -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/public-ipv4   # expect 404
+curl -s -H "X-aws-ec2-metadata-token: $TOKEN" http://169.254.169.254/latest/meta-data/local-ipv4; echo
+ip -br addr show
+# TEST 5 (laptop/CloudShell) all three instances
+aws ec2 describe-instances --filters Name=tag:Project,Values=EWB-VPC-Peering Name=instance-state-name,Values=running --query 'Reservations[].Instances[].[Tags[?Key==`Name`]|[0].Value,PrivateIpAddress,PublicIpAddress]' --output table
+# private path proof (on app-a)
+ip route get 10.20.1.10 ; ping -c 4 10.20.1.10
+# TEST 6 controlled failure (laptop/CloudShell, repo root)
+source ids.env
+aws ec2 revoke-security-group-ingress --group-id $SGB --ip-permissions "IpProtocol=icmp,FromPort=8,ToPort=-1,IpRanges=[{CidrIp=10.10.2.10/32}]"
+# on app-a:  ping -c 4 10.20.1.10   -> 100% loss (SSH rule untouched)
+aws ec2 authorize-security-group-ingress --group-id $SGB --ip-permissions "IpProtocol=icmp,FromPort=8,ToPort=-1,IpRanges=[{CidrIp=10.10.2.10/32,Description=icmp-echo-request}]"
+# on app-a:  ping -c 4 10.20.1.10   -> 0% loss
